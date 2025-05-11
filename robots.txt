@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://moha8-dotcom.github.io/Mohamed-moktar.github.io/sitemap.xml
