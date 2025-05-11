@@ -1,0 +1,1610 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>محمد البكاي | مهندس أمن سيبراني</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00ff00;
+            --secondary: #00cc00;
+            --dark: #111111;
+            --darker: #080808;
+            --light: #f0f0f0;
+            --gray: #333333;
+            --neon-glow: 0 0 10px rgba(0, 255, 0, 0.8);
+        }
+
+        [data-theme="light"] {
+            --primary: #0066cc;
+            --secondary: #004499;
+            --dark: #f0f0f0;
+            --darker: #e0e0e0;
+            --light: #111111;
+            --gray: #cccccc;
+            --neon-glow: 0 0 10px rgba(0, 102, 204, 0.8);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'JetBrains Mono', monospace;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body {
+            background-color: var(--dark);
+            color: var(--light);
+            overflow-x: hidden;
+            position: relative;
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="%2300ff00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>'), auto;
+        }
+
+        /* Canvas Background */
+        #matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.1;
+        }
+
+        /* Header */
+        header {
+            background-color: rgba(8, 8, 8, 0.9);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            border-bottom: 1px solid var(--primary);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .logo h1 {
+            font-size: 1.5rem;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: var(--neon-glow);
+        }
+
+        .logo i {
+            color: var(--primary);
+            font-size: 1.8rem;
+            text-shadow: var(--neon-glow);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: bold;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--primary);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+            left: 0;
+            right: auto;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--light);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .theme-toggle:hover {
+            transform: rotate(30deg);
+            color: var(--primary);
+        }
+
+        /* Main Content */
+        main {
+            padding-top: 80px;
+            min-height: 100vh;
+        }
+
+        section {
+            padding: 4rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .hero {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            min-height: 80vh;
+            position: relative;
+        }
+
+        .hero h2 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .typewriter {
+            border-right: 3px solid var(--primary);
+            white-space: nowrap;
+            overflow: hidden;
+            animation: blink-caret 0.75s step-end infinite;
+        }
+
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: var(--primary); }
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            background-color: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 1rem;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            transition: color 0.3s;
+        }
+
+        .btn:hover {
+            color: var(--dark);
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+            transition: left 0.5s;
+            z-index: -1;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        /* About Section */
+        .about {
+            background-color: var(--darker);
+            position: relative;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            font-size: 2.5rem;
+            color: var(--primary);
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 3px;
+            background-color: var(--primary);
+            margin: 0.5rem auto;
+        }
+
+        .about-content {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .about-text {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .about-text h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .about-text p {
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        .terminal {
+            flex: 1;
+            min-width: 300px;
+            background-color: var(--gray);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .terminal-header {
+            background-color: #222;
+            padding: 0.5rem 1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .terminal-buttons {
+            display: flex;
+            gap: 0.5rem;
+            margin-right: 1rem;
+        }
+
+        .terminal-btn {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .terminal-btn.red {
+            background-color: #ff5f56;
+        }
+
+        .terminal-btn.yellow {
+            background-color: #ffbd2e;
+        }
+
+        .terminal-btn.green {
+            background-color: #27c93f;
+        }
+
+        .terminal-title {
+            flex-grow: 1;
+            text-align: center;
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+
+        .terminal-body {
+            padding: 1rem;
+            font-family: 'JetBrains Mono', monospace;
+            height: 300px;
+            overflow-y: auto;
+        }
+
+        .terminal-line {
+            margin-bottom: 0.5rem;
+            line-height: 1.5;
+        }
+
+        .terminal-prompt {
+            color: var(--primary);
+        }
+
+        .terminal-command {
+            color: var(--light);
+        }
+
+        .terminal-output {
+            color: #aaa;
+        }
+
+        /* Services Section */
+        .services {
+            position: relative;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .service-card {
+            background-color: var(--darker);
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid var(--gray);
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 255, 0, 0.2);
+            border-color: var(--primary);
+        }
+
+        .service-icon {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .service-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .service-card p {
+            line-height: 1.6;
+        }
+
+        /* Skills Section */
+        .skills {
+            background-color: var(--darker);
+            position: relative;
+        }
+
+        .skills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            justify-content: center;
+        }
+
+        .skill-category {
+            flex: 1;
+            min-width: 300px;
+            background-color: var(--dark);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .skill-category h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+            text-align: center;
+        }
+
+        .skill-item {
+            margin-bottom: 1.5rem;
+        }
+
+        .skill-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .skill-name {
+            font-weight: bold;
+        }
+
+        .skill-percent {
+            color: var(--primary);
+        }
+
+        .skill-bar {
+            height: 10px;
+            background-color: var(--gray);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .skill-progress {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 5px;
+            transition: width 1s ease-in-out;
+        }
+
+        /* Achievements Section */
+        .achievements {
+            position: relative;
+        }
+
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .achievement-card {
+            background-color: var(--darker);
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s;
+            border: 1px solid var(--gray);
+        }
+
+        .achievement-card:hover {
+            transform: scale(1.05);
+            border-color: var(--primary);
+        }
+
+        .achievement-icon {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .achievement-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .achievement-card p {
+            line-height: 1.6;
+            color: #aaa;
+        }
+
+        /* Contact Section */
+        .contact {
+            background-color: var(--darker);
+            position: relative;
+        }
+
+        .contact-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .contact-info {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .contact-info h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+        }
+
+        .contact-info p {
+            line-height: 1.8;
+            margin-bottom: 2rem;
+        }
+
+        .contact-details {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .contact-icon {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .contact-form {
+            flex: 1;
+            min-width: 300px;
+            background-color: var(--dark);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            background-color: var(--gray);
+            border: none;
+            border-radius: 5px;
+            color: var(--light);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .form-group textarea {
+            height: 150px;
+            resize: vertical;
+        }
+
+        .form-submit {
+            background-color: var(--primary);
+            color: var(--dark);
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .form-submit:hover {
+            background-color: var(--secondary);
+        }
+
+        /* Visitor Counter */
+        .visitor-counter {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: rgba(8, 8, 8, 0.8);
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            border: 1px solid var(--primary);
+            box-shadow: var(--neon-glow);
+            z-index: 100;
+        }
+
+        /* Password Generator */
+        .password-generator {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background-color: rgba(8, 8, 8, 0.8);
+            padding: 1rem;
+            border-radius: 5px;
+            max-width: 300px;
+            border: 1px solid var(--primary);
+            box-shadow: var(--neon-glow);
+            z-index: 100;
+        }
+
+        .password-generator h4 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .password-display {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            word-break: break-all;
+            color: var(--primary);
+        }
+
+        .password-tip {
+            font-size: 0.8rem;
+            color: #aaa;
+        }
+
+        /* Daily Quote */
+        .daily-quote {
+            margin: 3rem auto;
+            padding: 2rem;
+            background-color: var(--darker);
+            border-left: 4px solid var(--primary);
+            max-width: 800px;
+            text-align: center;
+        }
+
+        .quote-text {
+            font-size: 1.2rem;
+            font-style: italic;
+            margin-bottom: 1rem;
+        }
+
+        .quote-author {
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        /* Back to Top Button */
+        .back-to-top {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background-color: var(--primary);
+            color: var(--dark);
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+            z-index: 100;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            background-color: var(--secondary);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--darker);
+            padding: 2rem;
+            text-align: center;
+            border-top: 1px solid var(--gray);
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .social-link {
+            color: var(--light);
+            font-size: 1.5rem;
+            transition: color 0.3s, transform 0.3s;
+        }
+
+        .social-link:hover {
+            color: var(--primary);
+            transform: translateY(-5px);
+        }
+
+        .copyright {
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+
+        /* 404 Page */
+        .page-404 {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .error-code {
+            font-size: 6rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+        }
+
+        .error-message {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .error-description {
+            max-width: 600px;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        /* Matrix Effect for Cybersecurity Text */
+        .matrix-text {
+            position: relative;
+            display: inline-block;
+        }
+
+        .matrix-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.3;
+        }
+
+        /* Easter Egg Modal */
+        .easter-egg-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+
+        .easter-egg-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .easter-egg-content {
+            background-color: var(--darker);
+            padding: 2rem;
+            border-radius: 8px;
+            text-align: center;
+            max-width: 500px;
+            border: 2px solid var(--primary);
+            box-shadow: 0 0 20px var(--primary);
+        }
+
+        .easter-egg-content i {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .easter-egg-content p {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .close-easter-egg {
+            background-color: var(--primary);
+            color: var(--dark);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* Sound Toggle */
+        .sound-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 80px;
+            background-color: rgba(8, 8, 8, 0.8);
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            border: 1px solid var(--primary);
+            box-shadow: var(--neon-glow);
+            z-index: 100;
+            cursor: pointer;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero h2 {
+                font-size: 2rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .password-generator {
+                position: static;
+                max-width: 100%;
+                margin: 2rem auto;
+            }
+            
+            .visitor-counter {
+                position: static;
+                margin: 2rem auto;
+                width: fit-content;
+            }
+        }
+
+        /* Animation Classes */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* Parallax Effect */
+        .parallax {
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+    </style>
+</head>
+<body>
+    <!-- Canvas Background -->
+    <canvas id="matrix-bg"></canvas>
+
+    <!-- Header -->
+    <header>
+        <nav>
+            <div class="logo" id="logo">
+                <i class="fas fa-lock"></i>
+                <h1>البكاي</h1>
+            </div>
+            <div class="nav-links">
+                <a href="#home">الرئيسية</a>
+                <a href="#about">من أنا</a>
+                <a href="#services">الخدمات</a>
+                <a href="#skills">المهارات</a>
+                <a href="#achievements">الإنجازات</a>
+                <a href="#contact">التواصل</a>
+            </div>
+            <button class="theme-toggle" id="themeToggle">
+                <i class="fas fa-moon"></i>
+            </button>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Home Section -->
+        <section id="home" class="hero">
+            <h2><span class="matrix-text">الأمن السيبراني</span></h2>
+            <canvas class="matrix-canvas"></canvas>
+            <p class="typewriter" id="typewriter">مرحباً، أنا محمد البكاي، مهندس أمن سيبراني متخصص في الاختراق الأخلاقي وحماية الأنظمة.</p>
+            <a href="#contact" class="btn">تواصل معي</a>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="about">
+            <h2 class="section-title">من أنا</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <h3>محمد المختار الحسن البكاي</h3>
+                    <p>مهندس أمن سيبراني معتمد بخبرة تزيد عن 5 سنوات في مجال حماية الأنظمة والشبكات. متخصص في الاختبارات الأمنية وتقييم الثغرات وبناء أنظمة دفاعية متكاملة.</p>
+                    <p>حاصل على شهادات متقدمة في مجال الأمن السيبراني مثل CEH و OSCP و CISSP. أسعى دائماً لتطوير مهاراتي ومساعدة الشركات في حماية بياناتها وأنظمتها من التهديدات الإلكترونية.</p>
+                    <p>أؤمن بأن الأمن السيبراني ليس مجرد وظيفة، بل هو أسلوب حياة يتطلب الالتزام المستمر بالتعلم والتكيف مع التهديدات المتطورة.</p>
+                </div>
+                <div class="terminal">
+                    <div class="terminal-header">
+                        <div class="terminal-buttons">
+                            <div class="terminal-btn red"></div>
+                            <div class="terminal-btn yellow"></div>
+                            <div class="terminal-btn green"></div>
+                        </div>
+                        <div class="terminal-title">terminal — bash — 80×24</div>
+                    </div>
+                    <div class="terminal-body" id="terminalBody">
+                        <div class="terminal-line"><span class="terminal-prompt">user@cybersec:~$</span> <span class="terminal-command">whoami</span></div>
+                        <div class="terminal-line terminal-output">mohamed-albakay</div>
+                        <div class="terminal-line"><span class="terminal-prompt">user@cybersec:~$</span> <span class="terminal-command">cat about.txt</span></div>
+                        <div class="terminal-line terminal-output">مهندس أمن سيبراني متخصص</div>
+                        <div class="terminal-line terminal-output">خبرة في اختبار الاختراق</div>
+                        <div class="terminal-line terminal-output">تحليل البرمجيات الخبيثة</div>
+                        <div class="terminal-line terminal-output">تأمين البنية التحتية</div>
+                        <div class="terminal-line"><span class="terminal-prompt">user@cybersec:~$</span> <span class="terminal-command">nmap --version</span></div>
+                        <div class="terminal-line terminal-output">Nmap 7.92 ( https://nmap.org )</div>
+                        <div class="terminal-line"><span class="terminal-prompt">user@cybersec:~$</span> <span class="terminal-command">python3 --version</span></div>
+                        <div class="terminal-line terminal-output">Python 3.9.2</div>
+                        <div class="terminal-line"><span class="terminal-prompt">user@cybersec:~$</span> <span class="terminal-command"></span><span class="terminal-cursor">_</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Daily Quote -->
+        <div class="daily-quote">
+            <p class="quote-text" id="dailyQuote">"أفضل دفاع هو هجوم جيد التخطيط."</p>
+            <p class="quote-author" id="quoteAuthor">- صن تزو</p>
+        </div>
+
+        <!-- Services Section -->
+        <section id="services" class="services">
+            <h2 class="section-title">الخدمات</h2>
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>اختبار الاختراق</h3>
+                    <p>تقييم أمني شامل لأنظمتك وتطبيقاتك للكشف عن الثغرات الأمنية قبل أن يستغلها المخترقون.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <h3>تأمين الشبكات</h3>
+                    <p>تصميم وتنفيذ حلول أمنية متكاملة لحماية شبكتك من الهجمات الخارجية والداخلية.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-bug"></i>
+                    </div>
+                    <h3>تحليل البرمجيات الخبيثة</h3>
+                    <p>تحليل متقدم للبرمجيات الضارة لفهم آلية عملها وتطوير وسائل الحماية المناسبة.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-user-secret"></i>
+                    </div>
+                    <h3>التدريب الأمني</h3>
+                    <p>برامج تدريبية مخصصة لرفع الوعي الأمني وتعزيز المهارات الدفاعية لدى فرق العمل.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <h3>مراجعة الأكواد</h3>
+                    <p>فحص دقيق للأكواد البرمجية للكشف عن نقاط الضعف الأمنية قبل نشر التطبيقات.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-phone-alt"></i>
+                    </div>
+                    <h3>الاستجابة للحوادث</h3>
+                    <p>خدمات استجابة سريعة للحوادث الأمنية واحتواء الاختراقات وتحليل أسبابها.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section id="skills" class="skills">
+            <h2 class="section-title">المهارات</h2>
+            <div class="skills-container">
+                <div class="skill-category">
+                    <h3>أمن الشبكات</h3>
+                    <div class="skill-item">
+                        <div class="skill-info">
+                            <span class="skill-name">أمن البنية التحتية</span>
+                            <span class="skill-percent">95%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="width: 95%"></div>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-info">
+                            <span class="skill-name">جدران الحماية</span>
+                            <span class="skill-percent">90%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="width: 90%"></div>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-info">
+                            <span class="skill-name">أنظمة كشف التسلل</span>
+                            <span class="skill-percent">85%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="width: 85%"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h3>اختبار الاختراق</h3>
+                    <div class="skill-item">
+                        <div class="skill-info">
+                            <span class="skill-name">اختبار الاختراق الخارجي</span>
+                            <span class="skill-percent">92%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="width: 92%"></div>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-info">
+                            <span class="skill-name">اختبار الاختراق الداخلي</span>
+                            <span class="skill-percent">88%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="width: 88%"></div>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-info">
+                            <span class="skill-name">اختبار تطبيقات الويب</span>
+                            <span class="skill-percent">94%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="width: 94%"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h3>التطوير الأمني</h3>
+                    <div class="skill-item">
+                        <div class="skill-info">
+                            <span class="skill-name">بايثون</span>
+                            <span class="skill-percent">90%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="width: 90%"></div>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-info">
+                            <span class="skill-name">تطوير أدوات الأمن</span>
+                            <span class="skill-percent">85%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="width: 85%"></div>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-info">
+                            <span class="skill-name">أتمتة المهام الأمنية</span>
+                            <span class="skill-percent">87%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="width: 87%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Achievements Section -->
+        <section id="achievements" class="achievements">
+            <h2 class="section-title">الإنجازات</h2>
+            <div class="achievements-grid">
+                <div class="achievement-card">
+                    <div class="achievement-icon">
+                        <i class="fas fa-certificate"></i>
+                    </div>
+                    <h3>CEH معتمد</h3>
+                    <p>شهادة القرصان الأخلاقي المعتمد من EC-Council</p>
+                </div>
+                <div class="achievement-card">
+                    <div class="achievement-icon">
+                        <i class="fas fa-certificate"></i>
+                    </div>
+                    <h3>OSCP معتمد</h3>
+                    <p>شهادة محترف اختبار الاختراق من Offensive Security</p>
+                </div>
+                <div class="achievement-card">
+                    <div class="achievement-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <h3>الفائز بمسابقة CTF</h3>
+                    <p>المركز الأول في مسابقة Capture The Flag الإقليمية 2022</p>
+                </div>
+                <div class="achievement-card">
+                    <div class="achievement-icon">
+                        <i class="fas fa-project-diagram"></i>
+                    </div>
+                    <h3>50+ مشروع أمني</h3>
+                    <p>تنفيذ أكثر من 50 مشروع أمني لشركات محلية ودولية</p>
+                </div>
+                <div class="achievement-card">
+                    <div class="achievement-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>تدريب 500+ متخصص</h3>
+                    <p>تدريب أكثر من 500 متخصص في مجال الأمن السيبراني</p>
+                </div>
+                <div class="achievement-card">
+                    <div class="achievement-icon">
+                        <i class="fas fa-bug"></i>
+                    </div>
+                    <h3>اكتشاف 100+ ثغرة</h3>
+                    <p>اكتشاف وإصلاح أكثر من 100 ثغرة أمنية في أنظمة مختلفة</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="contact">
+            <h2 class="section-title">تواصل معي</h2>
+            <div class="contact-container">
+                <div class="contact-info">
+                    <h3>لنعمل معاً</h3>
+                    <p>إذا كنت تبحث عن خبير أمن سيبراني لتعزيز حماية أنظمتك أو تحتاج إلى استشارة أمنية، لا تتردد في التواصل معي.</p>
+                    <div class="contact-details">
+                        <div class="contact-item">
+                            <i class="fas fa-envelope contact-icon"></i>
+                            <span>contact@albakay.cyber</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-phone contact-icon"></i>
+                            <span>+123 456 7890</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-map-marker-alt contact-icon"></i>
+                            <span>الرياض، المملكة العربية السعودية</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-form">
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <label for="name">الاسم</label>
+                            <input type="text" id="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">البريد الإلكتروني</label>
+                            <input type="email" id="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="subject">الموضوع</label>
+                            <input type="text" id="subject" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">الرسالة</label>
+                            <textarea id="message" required></textarea>
+                        </div>
+                        <button type="submit" class="form-submit">إرسال</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Password Generator -->
+    <div class="password-generator">
+        <h4>كلمة سر مقترحة:</h4>
+        <div class="password-display" id="passwordDisplay">N3on$hadow47!</div>
+        <p class="password-tip">تذكر: استخدم كلمات سر قوية وفريدة لكل حساب!</p>
+    </div>
+
+    <!-- Visitor Counter -->
+    <div class="visitor-counter" id="visitorCounter">
+        لقد قضيت معنا 0:00 دقيقة، سعيدون بزيارتك.
+    </div>
+
+    <!-- Sound Toggle -->
+    <div class="sound-toggle" id="soundToggle">
+        <i class="fas fa-volume-up"></i> تفعيل الأصوات
+    </div>
+
+    <!-- Back to Top Button -->
+    <button class="back-to-top" id="backToTop">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Footer -->
+    <footer>
+        <div class="social-links">
+            <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+            <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+            <a href="#" class="social-link"><i class="fab fa-hackerrank"></i></a>
+        </div>
+        <p class="copyright">© 2023 محمد المختار الحسن البكاي. جميع الحقوق محفوظة.</p>
+    </footer>
+
+    <!-- Easter Egg Modal -->
+    <div class="easter-egg-modal" id="easterEggModal">
+        <div class="easter-egg-content">
+            <i class="fas fa-key"></i>
+            <p id="easterEggQuote">"إذا لم تجد الباب... كن المفتاح."</p>
+            <button class="close-easter-egg" id="closeEasterEgg">حسناً</button>
+        </div>
+    </div>
+
+    <!-- Audio Elements -->
+    <audio id="hoverSound" src="https://assets.mixkit.co/sfx/preview/mixkit-arcade-game-jump-coin-216.mp3" preload="auto"></audio>
+    <audio id="clickSound" src="https://assets.mixkit.co/sfx/preview/mixkit-select-click-1109.mp3" preload="auto"></audio>
+
+    <script>
+        // Matrix Background
+        const canvas = document.getElementById('matrix-bg');
+        const ctx = canvas.getContext('2d');
+        
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        const arabicChars = 'ضصثقفغعهخحجدذشسيبلاتنمكطئءؤرﻻىةوزظ';
+        const latinChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()_+';
+        const chars = arabicChars + latinChars;
+        const fontSize = 14;
+        const columns = canvas.width / fontSize;
+        
+        const drops = [];
+        for (let i = 0; i < columns; i++) {
+            drops[i] = 1;
+        }
+        
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.fillStyle = '#0f0';
+            ctx.font = fontSize + 'px JetBrains Mono';
+            
+            for (let i = 0; i < drops.length; i++) {
+                const text = chars.charAt(Math.floor(Math.random() * chars.length));
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                
+                drops[i]++;
+            }
+        }
+        
+        // Matrix Effect for Cybersecurity Text
+        const matrixText = document.querySelector('.matrix-text');
+        const matrixCanvas = document.querySelector('.matrix-canvas');
+        const matrixCtx = matrixCanvas.getContext('2d');
+        
+        matrixCanvas.width = matrixText.offsetWidth + 20;
+        matrixCanvas.height = matrixText.offsetHeight + 20;
+        
+        function drawMatrixText() {
+            matrixCtx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            matrixCtx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
+            
+            matrixCtx.fillStyle = '#0f0';
+            matrixCtx.font = '14px JetBrains Mono';
+            
+            for (let i = 0; i < matrixCanvas.width / 14; i++) {
+                const text = chars.charAt(Math.floor(Math.random() * chars.length));
+                matrixCtx.fillText(text, i * 14, (matrixCanvas.height * Math.random()));
+            }
+        }
+        
+        // Typewriter Effect
+        const typewriterElement = document.getElementById('typewriter');
+        const texts = [
+            "مرحباً، أنا محمد البكاي، مهندس أمن سيبراني متخصص في الاختراق الأخلاقي وحماية الأنظمة.",
+            "أقدم خدمات أمنية متكاملة لتأمين البنية التحتية والشبكات والتطبيقات.",
+            "خبير في اكتشاف الثغرات الأمنية وبناء أنظمة دفاعية متقدمة."
+        ];
+        let textIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        
+        function typeWriter() {
+            const currentText = texts[textIndex];
+            
+            if (isDeleting) {
+                typewriterElement.textContent = currentText.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                typewriterElement.textContent = currentText.substring(0, charIndex + 1);
+                charIndex++;
+            }
+            
+            if (!isDeleting && charIndex === currentText.length) {
+                isDeleting = true;
+                setTimeout(typeWriter, 2000);
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                textIndex = (textIndex + 1) % texts.length;
+                setTimeout(typeWriter, 500);
+            } else {
+                const speed = isDeleting ? 50 : 100;
+                setTimeout(typeWriter, speed);
+            }
+        }
+        
+        // Terminal Animation
+        const terminalBody = document.getElementById('terminalBody');
+        const terminalCommands = [
+            "whoami",
+            "cat about.txt",
+            "nmap --version",
+            "python3 --version",
+            "msfconsole",
+            "hydra -h",
+            "sqlmap --help"
+        ];
+        
+        function terminalAnimation() {
+            let i = 0;
+            const interval = setInterval(() => {
+                if (i < terminalCommands.length) {
+                    const prompt = document.createElement('div');
+                    prompt.className = 'terminal-line';
+                    prompt.innerHTML = `<span class="terminal-prompt">user@cybersec:~$</span> <span class="terminal-command">${terminalCommands[i]}</span>`;
+                    
+                    const output = document.createElement('div');
+                    output.className = 'terminal-line terminal-output';
+                    
+                    terminalBody.appendChild(prompt);
+                    
+                    if (terminalCommands[i] === "whoami") {
+                        output.textContent = "mohamed-albakay";
+                    } else if (terminalCommands[i] === "cat about.txt") {
+                        output.innerHTML = "مهندس أمن سيبراني متخصص<br>خبرة في اختبار الاختراق<br>تحليل البرمجيات الخبيثة<br>تأمين البنية التحتية";
+                    } else if (terminalCommands[i] === "nmap --version") {
+                        output.textContent = "Nmap 7.92 ( https://nmap.org )";
+                    } else if (terminalCommands[i] === "python3 --version") {
+                        output.textContent = "Python 3.9.2";
+                    } else if (terminalCommands[i] === "msfconsole") {
+                        output.innerHTML = "Metasploit Framework Console<br>Version: 6.1.0-dev";
+                    } else if (terminalCommands[i] === "hydra -h") {
+                        output.innerHTML = "Hydra v9.3 (c) 2022 by van Hauser/THC & David Maciejak";
+                    } else if (terminalCommands[i] === "sqlmap --help") {
+                        output.innerHTML = "sqlmap 1.5.12#stable<br>Automatic SQL injection and database takeover tool";
+                    }
+                    
+                    terminalBody.appendChild(output);
+                    
+                    const cursor = document.createElement('div');
+                    cursor.className = 'terminal-line';
+                    cursor.innerHTML = `<span class="terminal-prompt">user@cybersec:~$</span> <span class="terminal-command"></span><span class="terminal-cursor">_</span>`;
+                    terminalBody.appendChild(cursor);
+                    
+                    terminalBody.scrollTop = terminalBody.scrollHeight;
+                    i++;
+                } else {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        terminalBody.innerHTML = '';
+                        terminalAnimation();
+                    }, 5000);
+                }
+            }, 2000);
+        }
+        
+        // Password Generator
+        function generatePassword() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:,.<>?';
+            let password = '';
+            
+            for (let i = 0; i < 12; i++) {
+                password += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            
+            document.getElementById('passwordDisplay').textContent = password;
+        }
+        
+        // Visitor Counter
+        function updateVisitorCounter() {
+            let seconds = 0;
+            const counterElement = document.getElementById('visitorCounter');
+            
+            setInterval(() => {
+                seconds++;
+                const minutes = Math.floor(seconds / 60);
+                const remainingSeconds = seconds % 60;
+                counterElement.textContent = `لقد قضيت معنا ${minutes}:${remainingSeconds < 10 ? '0' + remainingSeconds : remainingSeconds} دقيقة، سعيدون بزيارتك.`;
+            }, 1000);
+        }
+        
+        // Daily Quote
+        const quotes = [
+            { text: "أفضل دفاع هو هجوم جيد التخطيط.", author: "صن تزو" },
+            { text: "الأمن ليس منتجاً، بل هو عملية.", author: "بروس شناير" },
+            { text: "الثغرة الأمنية ليست مشكلة حتى يعرفها أحد.", author: "مثل سيبراني" },
+            { text: "الجهل بالأمن لا يعفي من المسؤولية.", author: "قانون سيبراني" },
+            { text: "الاختراق هو فن تحويل الثغرات إلى فرص.", author: "كيفن ميتنيك" },
+            { text: "في عالم الأصفار والواحدات، كن الواحد.", author: "مثل سيبراني" }
+        ];
+        
+        function showDailyQuote() {
+            const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+            document.getElementById('dailyQuote').textContent = randomQuote.text;
+            document.getElementById('quoteAuthor').textContent = `- ${randomQuote.author}`;
+        }
+        
+        // Easter Egg
+        let clickCount = 0;
+        const logo = document.getElementById('logo');
+        const easterEggModal = document.getElementById('easterEggModal');
+        const closeEasterEgg = document.getElementById('closeEasterEgg');
+        
+        function handleLogoClick() {
+            clickCount++;
+            
+            if (clickCount >= 5) {
+                easterEggModal.classList.add('active');
+                clickCount = 0;
+            }
+        }
+        
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = themeToggle.querySelector('i');
+        
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            
+            if (currentTheme === 'light') {
+                document.documentElement.removeAttribute('data-theme');
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.documentElement.setAttribute('data-theme', 'light');
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+                localStorage.setItem('theme', 'light');
+            }
+            
+            playClickSound();
+        }
+        
+        // Back to Top Button
+        const backToTopButton = document.getElementById('backToTop');
+        
+        function handleScroll() {
+            if (window.pageYOffset > 300) {
+                backToTopButton.classList.add('visible');
+            } else {
+                backToTopButton.classList.remove('visible');
+            }
+        }
+        
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+            
+            playClickSound();
+        }
+        
+        // Sound Effects
+        let soundEnabled = false;
+        const soundToggle = document.getElementById('soundToggle');
+        const hoverSound = document.getElementById('hoverSound');
+        const clickSound = document.getElementById('clickSound');
+        
+        function playHoverSound() {
+            if (soundEnabled) {
+                hoverSound.currentTime = 0;
+                hoverSound.play();
+            }
+        }
+        
+        function playClickSound() {
+            if (soundEnabled) {
+                clickSound.currentTime = 0;
+                clickSound.play();
+            }
+        }
+        
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            soundToggle.innerHTML = soundEnabled ? 
+                '<i class="fas fa-volume-up"></i> تعطيل الأصوات' : 
+                '<i class="fas fa-volume-mute"></i> تفعيل الأصوات';
+            
+            localStorage.setItem('soundEnabled', soundEnabled);
+        }
+        
+        // Smooth Scrolling for Anchor Links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                    
+                    playClickSound();
+                }
+            });
+        });
+        
+        // Hover Effects with Sound
+        document.querySelectorAll('a, button, .service-card, .achievement-card').forEach(element => {
+            element.addEventListener('mouseenter', playHoverSound);
+        });
+        
+        // Initialize
+        function init() {
+            // Set initial theme
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            if (savedTheme === 'light') {
+                document.documentElement.setAttribute('data-theme', 'light');
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+            }
+            
+            // Set initial sound state
+            soundEnabled = localStorage.getItem('soundEnabled') === 'true';
+            soundToggle.innerHTML = soundEnabled ? 
+                '<i class="fas fa-volume-up"></i> تعطيل الأصوات' : 
+                '<i class="fas fa-volume-mute"></i> تفعيل الأصوات';
+            
+            // Start animations
+            setInterval(drawMatrix, 50);
+            setInterval(drawMatrixText, 100);
+            setTimeout(typeWriter, 1000);
+            setTimeout(terminalAnimation, 1500);
+            generatePassword();
+            setInterval(generatePassword, 10000);
+            updateVisitorCounter();
+            showDailyQuote();
+            
+            // Event listeners
+            window.addEventListener('resize', () => {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                matrixCanvas.width = matrixText.offsetWidth + 20;
+                matrixCanvas.height = matrixText.offsetHeight + 20;
+            });
+            
+            logo.addEventListener('click', handleLogoClick);
+            closeEasterEgg.addEventListener('click', () => {
+                easterEggModal.classList.remove('active');
+                playClickSound();
+            });
+            
+            themeToggle.addEventListener('click', toggleTheme);
+            window.addEventListener('scroll', handleScroll);
+            backToTopButton.addEventListener('click', scrollToTop);
+            soundToggle.addEventListener('click', toggleSound);
+            
+            // Form submission
+            document.getElementById('contactForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                alert('شكراً لتواصلك! سأرد عليك في أقرب وقت ممكن.');
+                this.reset();
+                playClickSound();
+            });
+        }
+        
+        // Run when DOM is loaded
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
